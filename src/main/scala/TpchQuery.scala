@@ -46,7 +46,7 @@ object TpchQuery {
 
     // if set write results to hdfs, if null write to stdout
     // val OUTPUT_DIR: String = "/tpch"
-    val OUTPUT_DIR: String = "file://" + new File(".").getAbsolutePath() + "/dbgen/output"
+    val OUTPUT_DIR: String = "/tmp/output"
 
     val results = new ListBuffer[(String, Float)]
 
@@ -84,23 +84,23 @@ object TpchQuery {
     val sc = new SparkContext(conf)
 
     // read files from local FS
-    val INPUT_DIR = "file://" + new File(".").getAbsolutePath() + "/dbgen"
+    val INPUT_DIR = "/tmp/tpch-generate/10"
 
     // read from hdfs
     // val INPUT_DIR: String = "/dbgen"
 
     val schemaProvider = new TpchSchemaProvider(sc, INPUT_DIR)
 
-    val output = new ListBuffer[(String, Float)]
-    output ++= executeQueries(sc, schemaProvider, queryNum)
+    //val output = new ListBuffer[(String, Float)]
+    executeQueries(sc, schemaProvider, queryNum)
 
-    val outFile = new File("TIMES.txt")
-    val bw = new BufferedWriter(new FileWriter(outFile, true))
+    //val outFile = new File("TIMES.txt")
+    //val bw = new BufferedWriter(new FileWriter(outFile, true))
 
-    output.foreach {
-      case (key, value) => bw.write(f"${key}%s\t${value}%1.8f\n")
-    }
+    //output.foreach {
+    //  case (key, value) => bw.write(f"${key}%s\t${value}%1.8f\n")
+    //}
 
-    bw.close()
+    //bw.close()
   }
 }
