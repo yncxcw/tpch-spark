@@ -77,13 +77,16 @@ object TpchQuery {
   def main(args: Array[String]): Unit = {
 
     var queryNum = 0;
-    if (args.length > 0)
+    var querySize= "10";
+    if (args.length > 0){
       queryNum = args(0).toInt
+      querySize= args(1)
+    }
 
     val conf = new SparkConf().setAppName("Simple Application")
     val sc = new SparkContext(conf)
 
-    val INPUT_DIR = "/tmp/tpch-generate/10"
+    val INPUT_DIR = "/tmp/tpch-generate/"+querySize
 
 
     val schemaProvider = new TpchSchemaProvider(sc, INPUT_DIR)
