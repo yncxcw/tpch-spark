@@ -5,6 +5,17 @@ import org.apache.spark.rdd.RDD
 
 import org.apache.log4j.Logger
 
+
+import scala.concurrent.{Await, Future}
+import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
+
+
+import org.apache.spark.sql.types._
+
+import org.apache.spark.sql._
+import org.apache.spark._
+
 // TPC-H table schemas
 case class Customer(
   c_custkey: Int,
@@ -93,10 +104,71 @@ class TpchSchemaProvider(sc: SparkContext, inputDir: String){
 
 
  log.info("before")
-  
+
+  val dfMap =  scala.collection.mutable.Map[String, DataFrame]() 
+  val fcustomer = Future {
+    dfMap("customer")=sc.textFile(inputDir + "/customer").map(_.split('|')).map(p =>
+      Customer(p(0).trim.toInt, p(1).trim, p(2).trim, p(3).trim.toInt, p(4).trim, p(5).trim.toDouble, p(6).trim, p(7).trim)).toDF() 
+    0
+ }
+
+ val flineitem = Future {
+   dfMap("lineitem")= sc.textFile(inputDir + "/lineitem").map(_.split('|')).map(p =>
+      Lineitem(p(0).trim.toInt, p(1).trim.toInt, p(2).trim.toInt, p(3).trim.toInt, p(4).trim.toDouble, p(5).trim.toDouble, p(6).trim.toDouble, p(7).trim.toDouble, p(8).trim, p(9).trim, p(10).trim, p(11).trim, p(12).trim, p(13).trim, p(14).trim, p(15).trim)).toDF() 
+
+   0
+}
+
+ val fnation = Future {
+   dfMap("nation") = sc.textFile(inputDir + "/nation").map(_.split('|')).map(p =>Nation(p(0).trim.toInt, p(1).trim, p(2).trim.toInt, p(3).trim)).toDF()
+  0
+ }
+
+ val fregion = Future{
+   dfMap("region")=  sc.textFile(inputDir + "/region").map(_.split('|')).map(p =>Region(p(0).trim.toInt, p(1).trim, p(2).trim)).toDF()
+   0
+  }
+
+ val forder = Future{
+   dfMap("order") = sc.textFile(inputDir + "/orders").map(_.split('|')).map(p =>Order(p(0).trim.toInt, p(1).trim.toInt, p(2).trim, p(3).trim.toDouble, p(4).trim, p(5).trim, p(6).trim, p(7).trim.toInt, p(8).trim)).toDF()
+   0
+  }
+
+  val fpart = Future{
+   dfMap("part") = sc.textFile(inputDir + "/part").map(_.split('|')).map(p =>Part(p(0).trim.toInt, p(1).trim, p(2).trim, p(3).trim, p(4).trim, p(5).trim.toInt, p(6).trim, p(7).trim.toDouble, p(8).trim)).toDF()
+  0 
+  }
+
+  val fpartsupp = Future{
+   dfMap("partsupp")= sc.textFile(inputDir + "/partsupp").map(_.split('|')).map(p =>Partsupp(p(0).trim.toInt, p(1).trim.toInt, p(2).trim.toInt, p(3).trim.toDouble, p(4).trim)).toDF()
+   0
+  } 
+
+
+  val fsupplier = Future{
+   dfMap("sulier") =sc.textFile(inputDir + "/supplier").map(_.split('|')).map(p =>Supplier(p(0).trim.toInt, p(1).trim, p(2).trim, p(3).trim.toInt, p(4).trim, p(5).trim.toDouble, p(6).trim)).toDF()
+   0
+  }
+
+
+  Await.result(fsupplier,10 second)
+  Await.result(fpartsupp,10 second)
+  Await.result(fpart,10 second)
+  Await.result(forder,10 second)
+
+  Await.result(fregion,10 second)
+  Await.result(fnation,10 second)
+  Await.result(flineitem,10 second)
+  Await.result(fcustomer,10 second)
+
+
+
+
+
+ /*
   val dfMap = Map(
     "customer" -> sc.textFile(inputDir + "/customer").map(_.split('|')).map(p =>
-      Customer(p(0).trim.toInt, p(1).trim, p(2).trim, p(3).trim.toInt, p(4).trim, p(5).trim.toDouble, p(6).trim, p(7).trim)).toDF(),
+     Customer(p(0).trim.toInt, p(1).trim, p(2).trim, p(3).trim.toInt, p(4).trim, p(5).trim.toDouble, p(6).trim, p(7).trim)).toDF(),
 
     "lineitem" -> sc.textFile(inputDir + "/lineitem").map(_.split('|')).map(p =>
       Lineitem(p(0).trim.toInt, p(1).trim.toInt, p(2).trim.toInt, p(3).trim.toInt, p(4).trim.toDouble, p(5).trim.toDouble, p(6).trim.toDouble, p(7).trim.toDouble, p(8).trim, p(9).trim, p(10).trim, p(11).trim, p(12).trim, p(13).trim, p(14).trim, p(15).trim)).toDF(),
@@ -120,6 +192,8 @@ class TpchSchemaProvider(sc: SparkContext, inputDir: String){
       Supplier(p(0).trim.toInt, p(1).trim, p(2).trim, p(3).trim.toInt, p(4).trim, p(5).trim.toDouble, p(6).trim)).toDF()
   
     )
+  */
+
 
   log.info("after")
   // for implicits
