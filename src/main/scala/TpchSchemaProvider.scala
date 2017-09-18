@@ -88,7 +88,7 @@ class TpchSchemaProvider(sc: SparkContext, inputDir: String) {
 
   var loop=0
   val files=new Array[RDD[_]](20)
-  for( loop <- 1 to 20 ){
+  for( loop <- 0 to 19 ){
     files(loop) = sc.textFile("/HiBench/Wordcount/"+loop.toString)
   }
   val dfMap = Map(
