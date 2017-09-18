@@ -1,7 +1,7 @@
 package main.scala
 
 import org.apache.spark.SparkContext
-
+import org.apache.spark.rdd.RDD
 // TPC-H table schemas
 case class Customer(
   c_custkey: Int,
@@ -86,6 +86,11 @@ class TpchSchemaProvider(sc: SparkContext, inputDir: String) {
   val sqlContext = new org.apache.spark.sql.SQLContext(sc)
   import sqlContext.implicits._
 
+  var loop=0
+  val files=new Array[RDD[_]](20)
+  for( loop <- 1 to 20 ){
+    files(loop) = sc.textFile("/HiBench/Wordcount/"+loop.toString)
+  }
   val dfMap = Map(
     "customer" -> sc.textFile(inputDir + "/customer").map(_.split('|')).map(p =>
       Customer(p(0).trim.toInt, p(1).trim, p(2).trim, p(3).trim.toInt, p(4).trim, p(5).trim.toDouble, p(6).trim, p(7).trim)).toDF(),
