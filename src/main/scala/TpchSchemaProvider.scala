@@ -3,7 +3,7 @@ package main.scala
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 
-import org.apache.spark.internal.Logging
+import org.apache.log4j.Logger
 
 // TPC-H table schemas
 case class Customer(
@@ -83,14 +83,16 @@ case class Supplier(
   s_acctbal: Double,
   s_comment: String)
 
-class TpchSchemaProvider(sc: SparkContext, inputDir: String) extends  Logging{
+class TpchSchemaProvider(sc: SparkContext, inputDir: String){
+
+  val log = Logger.getLogger(getClass.getName)
 
   // this is used to implicitly convert an RDD to a DataFrame.
   val sqlContext = new org.apache.spark.sql.SQLContext(sc)
   import sqlContext.implicits._
 
 
- logInfo("before")
+ log.info("before")
   
   val dfMap = Map(
     "customer" -> sc.textFile(inputDir + "/customer").map(_.split('|')).map(p =>
@@ -119,7 +121,7 @@ class TpchSchemaProvider(sc: SparkContext, inputDir: String) extends  Logging{
   
     )
 
-  logInfo("after")
+  log.info("after")
   // for implicits
   val customer = dfMap.get("customer").get
   val lineitem = dfMap.get("lineitem").get
