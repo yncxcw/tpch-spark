@@ -146,7 +146,7 @@ class TpchSchemaProvider(sc: SparkContext, inputDir: String){
 
 
   val fsupplier = Future{
-   dfMap("sulier") =sc.textFile(inputDir + "/supplier").map(_.split('|')).map(p =>Supplier(p(0).trim.toInt, p(1).trim, p(2).trim, p(3).trim.toInt, p(4).trim, p(5).trim.toDouble, p(6).trim)).toDF()
+   dfMap("supplier") =sc.textFile(inputDir + "/supplier").map(_.split('|')).map(p =>Supplier(p(0).trim.toInt, p(1).trim, p(2).trim, p(3).trim.toInt, p(4).trim, p(5).trim.toDouble, p(6).trim)).toDF()
    0
   }
 
