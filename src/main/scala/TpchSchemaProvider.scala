@@ -105,6 +105,8 @@ class TpchSchemaProvider(sc: SparkContext, inputDir: String){
 
  log.info("before")
 
+ /*
+
   val dfMap =  scala.collection.mutable.Map[String, DataFrame]() 
   val fcustomer = Future {
     dfMap("customer")=sc.textFile(inputDir + "/customer").map(_.split('|')).map(p =>
@@ -162,10 +164,10 @@ class TpchSchemaProvider(sc: SparkContext, inputDir: String){
   Await.result(fcustomer,10 second)
 
 
+  */
 
 
-
- /*
+ 
   val dfMap = Map(
     "customer" -> sc.textFile(inputDir + "/customer").map(_.split('|')).map(p =>
      Customer(p(0).trim.toInt, p(1).trim, p(2).trim, p(3).trim.toInt, p(4).trim, p(5).trim.toDouble, p(6).trim, p(7).trim)).toDF(),
@@ -192,7 +194,7 @@ class TpchSchemaProvider(sc: SparkContext, inputDir: String){
       Supplier(p(0).trim.toInt, p(1).trim, p(2).trim, p(3).trim.toInt, p(4).trim, p(5).trim.toDouble, p(6).trim)).toDF()
   
     )
-  */
+  
 
 
   log.info("after")
