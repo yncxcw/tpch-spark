@@ -193,9 +193,7 @@ class TpchSchemaProvider(sc: SparkContext, inputDir: String){
     "supplier" -> sc.textFile(inputDir + "/supplier").map(_.split('|')).map(p =>
       Supplier(p(0).trim.toInt, p(1).trim, p(2).trim, p(3).trim.toInt, p(4).trim, p(5).trim.toDouble, p(6).trim)).toDF(),
   
-  
-
-    customer2" -> sc.textFile(inputDir + "/customer").map(_.split('|')).map(p =>
+    "customer2" -> sc.textFile(inputDir + "/customer").map(_.split('|')).map(p =>
      Customer(p(0).trim.toInt, p(1).trim, p(2).trim, p(3).trim.toInt, p(4).trim, p(5).trim.toDouble, p(6).trim, p(7).trim)).toDF(),
 
     "lineitem2" -> sc.textFile(inputDir + "/lineitem").map(_.split('|')).map(p =>
