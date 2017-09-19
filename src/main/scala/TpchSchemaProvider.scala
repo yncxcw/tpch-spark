@@ -239,8 +239,32 @@ class TpchSchemaProvider(sc: SparkContext, inputDir: String){
       Partsupp(p(0).trim.toInt, p(1).trim.toInt, p(2).trim.toInt, p(3).trim.toDouble, p(4).trim)).toDF(),
 
     "supplier3" -> sc.textFile(inputDir + "/supplier").map(_.split('|')).map(p =>
+      Supplier(p(0).trim.toInt, p(1).trim, p(2).trim, p(3).trim.toInt, p(4).trim, p(5).trim.toDouble, p(6).trim)).toDF(),
+    
+    "customer4" -> sc.textFile(inputDir + "/customer").map(_.split('|')).map(p =>
+     Customer(p(0).trim.toInt, p(1).trim, p(2).trim, p(3).trim.toInt, p(4).trim, p(5).trim.toDouble, p(6).trim, p(7).trim)).toDF(),
+
+    "lineitem4" -> sc.textFile(inputDir + "/lineitem").map(_.split('|')).map(p =>
+      Lineitem(p(0).trim.toInt, p(1).trim.toInt, p(2).trim.toInt, p(3).trim.toInt, p(4).trim.toDouble, p(5).trim.toDouble, p(6).trim.toDouble, p(7).trim.toDouble, p(8).trim, p(9).trim, p(10).trim, p(11).trim, p(12).trim, p(13).trim, p(14).trim, p(15).trim)).toDF(),
+
+    "nation4" -> sc.textFile(inputDir + "/nation").map(_.split('|')).map(p =>
+      Nation(p(0).trim.toInt, p(1).trim, p(2).trim.toInt, p(3).trim)).toDF(),
+
+    "region4" -> sc.textFile(inputDir + "/region").map(_.split('|')).map(p =>
+      Region(p(0).trim.toInt, p(1).trim, p(2).trim)).toDF(),
+
+    "order4" -> sc.textFile(inputDir + "/orders").map(_.split('|')).map(p =>
+      Order(p(0).trim.toInt, p(1).trim.toInt, p(2).trim, p(3).trim.toDouble, p(4).trim, p(5).trim, p(6).trim, p(7).trim.toInt, p(8).trim)).toDF(),
+
+    "part4" -> sc.textFile(inputDir + "/part").map(_.split('|')).map(p =>
+      Part(p(0).trim.toInt, p(1).trim, p(2).trim, p(3).trim, p(4).trim, p(5).trim.toInt, p(6).trim, p(7).trim.toDouble, p(8).trim)).toDF(),
+
+    "partsupp4" -> sc.textFile(inputDir + "/partsupp").map(_.split('|')).map(p =>
+      Partsupp(p(0).trim.toInt, p(1).trim.toInt, p(2).trim.toInt, p(3).trim.toDouble, p(4).trim)).toDF(),
+
+    "supplier4" -> sc.textFile(inputDir + "/supplier").map(_.split('|')).map(p =>
       Supplier(p(0).trim.toInt, p(1).trim, p(2).trim, p(3).trim.toInt, p(4).trim, p(5).trim.toDouble, p(6).trim)).toDF()
-    )
+)
   
 
 
